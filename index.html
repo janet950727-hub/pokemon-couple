@@ -1,0 +1,174 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>寶可夢起床集點卡</title>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;padding:25px 15px;
+  background:#fff2a8;
+  font-family:Arial,sans-serif;
+  color:#42351f;text-align:center;
+}
+.card{
+  max-width:430px;margin:auto;
+  background:#fffdf4;padding:25px;
+  border:4px solid #efc343;
+  border-radius:28px;
+  box-shadow:0 8px 0 #dfba4f;
+}
+h1{font-size:26px}
+.mascot{font-size:65px}
+.count{font-size:38px;font-weight:bold}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:12px;margin:25px 0;
+}
+.ball{
+  aspect-ratio:1;
+  border:3px solid #444;
+  border-radius:50%;
+  background:linear-gradient(#ddd 46%,#444 46%,#444 54%,white 54%);
+  position:relative;
+}
+.ball.active{
+  background:linear-gradient(#f44747 46%,#444 46%,#444 54%,white 54%);
+}
+.ball:after{
+  content:"";position:absolute;
+  width:25%;height:25%;
+  border:3px solid #444;
+  border-radius:50%;background:white;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+}
+button,input{
+  font-size:16px;border-radius:14px;
+  padding:13px;margin:5px 0;
+  width:100%;border:0;
+}
+button{background:#ffd447;cursor:pointer;font-weight:bold}
+button.secondary{background:#eeeeee}
+button.reward{background:#ff9999}
+button:disabled{opacity:.45;cursor:default}
+input{border:2px solid #efc343;text-align:center}
+.progress{
+  height:14px;background:#eee;
+  border-radius:20px;overflow:hidden;
+}
+#bar{height:100%;background:#ffd447;width:0%;transition:.3s}
+#status{font-size:13px;color:#777}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="mascot">⚡</div>
+  <h1>寶可夢起床集點卡</h1>
+  <p>每天乖乖起床，收集一顆精靈球！</p>
+  <input id="room" placeholder="輸入兩人共用的房間代碼">
+  <button onclick="connect()">連接集點卡</button>
+  <hr>
+  <p>目前累積點數</p>
+  <div class="count"><span id="points">0</span> / 15</div>
+  <div class="progress"><div id="bar"></div></div>
+  <div class="grid" id="grid"></div>
+  <button id="add" onclick="update('add')" disabled>
+    ☀️ 今天乖乖起床 ＋1
+  </button>
+  <button id="undo" class="secondary" onclick="update('undo')" disabled>
+    ↩️ 取消上一點
+  </button>
+  <button id="redeem" class="reward" onclick="redeem()" disabled>
+    🎁 兌換獎勵
+  </button>
+  <p id="remaining">再收集 15 點就能兌換獎勵！</p>
+  <p id="status">尚未連線</p>
+</div>
+<script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzHvVxQynYEOUEgHuzSCqvLYR8Fnwm1MVpUvgxCv4b3oazwLhAPvG5L3Uu04tYTbw3b1w/exec";
+
+let points = 0;
+let room = localStorage.getItem("pokemonRoom") || "";
+let busy = false;
+let connected = false;
+
+const el = id => document.getElementById(id);
+el("room").value = room;
+
+function render(){
+  el("points").textContent = points;
+  el("bar").style.width = (points/15*100)+"%";
+  el("grid").innerHTML = "";
+  for(let i=0;i<15;i++){
+    const ball=document.createElement("div");
+    ball.className="ball"+(i<points?" active":"");
+    el("grid").appendChild(ball);
+  }
+  el("remaining").textContent = points>=15
+    ? "恭喜集滿！可以兌換獎勵囉！"
+    : "再收集 "+(15-points)+" 點就能兌換獎勵！";
+
+  el("add").disabled = !connected || busy || points>=15;
+  el("undo").disabled = !connected || busy || points<=0;
+  el("redeem").disabled = !connected || busy || points<15;
+}
+
+async function update(action){
+  if(!room || busy)return;
+  busy=true;
+  render();
+  el("status").textContent="同步中…";
+  try{
+    const res=await fetch(SCRIPT_URL,{
+      method:"POST",
+      headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body:JSON.stringify({action:action,room:room})
+    });
+    const data=await res.json();
+    const value=Number(data.points ?? data.data?.points);
+    if(data.ok===false || data.success===false || !Number.isFinite(value)){
+      throw new Error("資料讀取失敗");
+    }
+    points=Math.max(0,Math.min(15,value));
+    connected=true;
+    el("status").textContent="● 已同步 "+new Date().toLocaleTimeString();
+  }catch(e){
+    connected=false;
+    el("status").textContent="⚠️ 同步失敗，請重新連接";
+  }finally{
+    busy=false;
+    render();
+  }
+}
+
+function connect(){
+  if(busy)return;
+  room=el("room").value.trim();
+  if(!room){
+    alert("請輸入房間代碼");
+    return;
+  }
+  connected=false;
+  points=0;
+  localStorage.setItem("pokemonRoom",room);
+  update("get");
+}
+
+function redeem(){
+  if(points>=15 && confirm("確定要兌換獎勵嗎？")){
+    update("redeem");
+  }
+}
+
+render();
+if(room)connect();
+setInterval(()=>{
+  if(room && !busy)update("get");
+},5000);
+</script>
+</body>
+</html>
