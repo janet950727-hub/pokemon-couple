@@ -4,171 +4,632 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>寶可夢起床集點卡</title>
+<title>寶可夢起床集點卡 2.0</title>
 <style>
 *{box-sizing:border-box}
 body{
-  margin:0;padding:25px 15px;
-  background:#fff2a8;
-  font-family:Arial,sans-serif;
-  color:#42351f;text-align:center;
+ margin:0;
+ padding:25px 12px;
+ font-family:Arial,"Microsoft JhengHei",sans-serif;
+ background:linear-gradient(135deg,#fff0a3,#ffe0bb,#fff6d5);
+ color:#685136;
+ min-height:100vh;
 }
 .card{
-  max-width:430px;margin:auto;
-  background:#fffdf4;padding:25px;
-  border:4px solid #efc343;
-  border-radius:28px;
-  box-shadow:0 8px 0 #dfba4f;
+ max-width:460px;
+ margin:auto;
+ background:#fffdf5;
+ border:3px solid #edca65;
+ padding:22px;
+ border-radius:30px;
+ text-align:center;
+ box-shadow:0 8px 25px #b58c2925;
 }
-h1{font-size:26px}
-.mascot{font-size:65px}
-.count{font-size:38px;font-weight:bold}
+h1{font-size:25px;margin:10px 0}
+h2{font-size:19px}
+.subtitle{font-size:14px;color:#a08760}
+.characters{
+ display:flex;
+ align-items:end;
+ justify-content:center;
+ gap:5px;
+ margin:18px 0;
+}
+.character{width:32%;font-size:12px}
+.character img{
+ width:100%;
+ max-width:120px;
+ animation:float 3s ease-in-out infinite;
+}
+.character:nth-child(2) img{
+ animation-delay:.5s;
+}
+.character:nth-child(3) img{
+ animation-delay:1s;
+}
+@keyframes float{
+ 50%{transform:translateY(-7px)}
+}
+input,button{
+ font-family:inherit;
+ font-size:15px;
+ border-radius:15px;
+ padding:13px;
+ width:100%;
+ margin:5px 0;
+}
+input{
+ border:2px solid #efd78e;
+ background:white;
+ text-align:center;
+ color:#685136;
+}
+button{
+ border:0;
+ background:#ffd34e;
+ color:#685136;
+ font-weight:bold;
+ cursor:pointer;
+ transition:.2s;
+}
+button:active{transform:scale(.97)}
+button:disabled{
+ opacity:.45;
+ cursor:default;
+}
+.secondary{background:#eeeae0}
+.redeem{background:#ffb1ae}
+.status{
+ font-size:12px;
+ color:#79845e;
+ margin:10px 0;
+}
+.count{
+ font-size:44px;
+ font-weight:bold;
+ color:#b58a24;
+}
+.progress{
+ background:#eee8da;
+ height:13px;
+ border-radius:20px;
+ overflow:hidden;
+ margin:12px 0 20px;
+}
+#bar{
+ height:100%;
+ width:0%;
+ background:linear-gradient(90deg,#ffdf64,#f8ad36);
+ transition:width .5s;
+ border-radius:20px;
+}
 .grid{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:12px;margin:25px 0;
+ display:grid;
+ grid-template-columns:repeat(5,1fr);
+ gap:12px;
+ margin:20px 0;
 }
 .ball{
-  aspect-ratio:1;
-  border:3px solid #444;
-  border-radius:50%;
-  background:linear-gradient(#ddd 46%,#444 46%,#444 54%,white 54%);
-  position:relative;
+ position:relative;
+ aspect-ratio:1;
+ border-radius:50%;
+ border:3px solid #504b45;
+ background:linear-gradient(
+ #ddd 46%,#504b45 46%,
+ #504b45 54%,white 54%);
 }
 .ball.active{
-  background:linear-gradient(#f44747 46%,#444 46%,#444 54%,white 54%);
+ background:linear-gradient(
+ #ff6464 46%,#504b45 46%,
+ #504b45 54%,white 54%);
+ box-shadow:0 0 12px #ffcf65;
 }
 .ball:after{
-  content:"";position:absolute;
-  width:25%;height:25%;
-  border:3px solid #444;
-  border-radius:50%;background:white;
-  top:50%;left:50%;
-  transform:translate(-50%,-50%);
+ content:"";
+ position:absolute;
+ width:25%;
+ height:25%;
+ background:white;
+ border:3px solid #504b45;
+ border-radius:50%;
+ top:50%;left:50%;
+ transform:translate(-50%,-50%);
 }
-button,input{
-  font-size:16px;border-radius:14px;
-  padding:13px;margin:5px 0;
-  width:100%;border:0;
+.ball.pop{
+ animation:pop .65s ease;
 }
-button{background:#ffd447;cursor:pointer;font-weight:bold}
-button.secondary{background:#eeeeee}
-button.reward{background:#ff9999}
-button:disabled{opacity:.45;cursor:default}
-input{border:2px solid #efc343;text-align:center}
-.progress{
-  height:14px;background:#eee;
-  border-radius:20px;overflow:hidden;
+@keyframes pop{
+ 30%{transform:scale(1.25) rotate(-15deg)}
+ 65%{transform:scale(.9) rotate(12deg)}
+ 100%{transform:scale(1)}
 }
-#bar{height:100%;background:#ffd447;width:0%;transition:.3s}
-#status{font-size:13px;color:#777}
+.rewardbox{
+ background:#fff0c9;
+ border:2px dashed #e4bc5c;
+ border-radius:20px;
+ padding:15px;
+ margin:18px 0;
+}
+#rewardText{
+ font-weight:bold;
+ font-size:20px;
+ overflow-wrap:anywhere;
+}
+.history{
+ text-align:left;
+ margin-top:20px;
+ background:#f9f5e9;
+ padding:15px;
+ border-radius:18px;
+}
+#historyList{
+ max-height:300px;
+ overflow:auto;
+}
+.entry{
+ padding:12px 0;
+ border-bottom:1px solid #e8dfcb;
+ font-size:14px;
+ overflow-wrap:anywhere;
+}
+.date{
+ font-size:11px;
+ color:#ad9a7b;
+ margin-top:5px;
+}
+.overlay{
+ position:fixed;
+ inset:0;
+ background:#0006;
+ display:none;
+ align-items:center;
+ justify-content:center;
+ padding:20px;
+ z-index:100;
+}
+.modal{
+ background:#fffdf4;
+ border:4px solid #f1ca5e;
+ border-radius:26px;
+ padding:25px;
+ max-width:380px;
+ width:100%;
+ text-align:center;
+ box-shadow:0 12px 40px #0003;
+}
+.modal img{width:140px}
+.modal h2{font-size:24px}
+.confetti{
+ position:fixed;
+ top:-20px;
+ z-index:200;
+ pointer-events:none;
+ animation:fall 3s linear forwards;
+}
+@keyframes fall{
+ to{transform:translateY(110vh) rotate(720deg)}
+}
+footer{
+ font-size:11px;
+ color:#b49f7a;
+ margin-top:20px;
+}
 </style>
 </head>
 <body>
+
 <div class="card">
-  <div class="mascot">⚡</div>
-  <h1>寶可夢起床集點卡</h1>
-  <p>每天乖乖起床，收集一顆精靈球！</p>
-  <input id="room" placeholder="輸入兩人共用的房間代碼">
-  <button onclick="connect()">連接集點卡</button>
-  <hr>
-  <p>目前累積點數</p>
-  <div class="count"><span id="points">0</span> / 15</div>
-  <div class="progress"><div id="bar"></div></div>
-  <div class="grid" id="grid"></div>
-  <button id="add" onclick="update('add')" disabled>
-    ☀️ 今天乖乖起床 ＋1
-  </button>
-  <button id="undo" class="secondary" onclick="update('undo')" disabled>
-    ↩️ 取消上一點
-  </button>
-  <button id="redeem" class="reward" onclick="redeem()" disabled>
-    🎁 兌換獎勵
-  </button>
-  <p id="remaining">再收集 15 點就能兌換獎勵！</p>
-  <p id="status">尚未連線</p>
+
+<h1>⚡ 寶可夢起床大挑戰 ⚡</h1>
+<p class="subtitle">每天乖乖起床，收集一顆精靈球！</p>
+
+<div class="characters">
+ <div class="character">
+ <img alt="皮卡丘" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png">
+ 皮卡丘
+ </div>
+ <div class="character">
+ <img alt="伊布" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/133.png">
+ 伊布
+ </div>
+ <div class="character">
+ <img alt="卡比獸" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/143.png">
+ 卡比獸
+ </div>
 </div>
+
+<input id="room" maxlength="24"
+ placeholder="輸入兩人共用的房間代碼">
+<button id="connect" onclick="connectRoom()">
+ 🔗 連接集點卡
+</button>
+
+<div id="status" class="status">尚未連線</div>
+
+<hr style="border:0;border-top:1px solid #eadfc6">
+
+<p>訓練家收集進度</p>
+
+<div class="count">
+ <span id="points">0</span> / 15
+</div>
+
+<div class="progress">
+ <div id="bar"></div>
+</div>
+
+<div id="grid" class="grid"></div>
+
+<p id="remaining">再收集15點即可兌換獎勵！</p>
+
+<div class="rewardbox">
+ <p>🎁 本次集點獎勵</p>
+ <div id="rewardText">神秘驚喜獎勵</div>
+ <button id="edit" class="secondary"
+ onclick="editReward()" disabled>
+ ✏️ 修改獎勵內容
+ </button>
+</div>
+
+<button id="add" onclick="update('add')" disabled>
+ ☀️ 今天乖乖起床 ＋1
+</button>
+
+<button id="undo" class="secondary"
+ onclick="undoPoint()" disabled>
+ ↩️ 取消上一點
+</button>
+
+<button id="redeem" class="redeem"
+ onclick="redeemReward()" disabled>
+ 🎁 兌換獎勵
+</button>
+
+<p id="daily" class="subtitle">
+ 每天限集點一次
+</p>
+
+<div class="history">
+ <h2>📖 冒險紀錄</h2>
+ <p>累積兌換：<span id="total">0</span> 次</p>
+ <div id="historyList">目前沒有紀錄</div>
+</div>
+
+<footer>Pokémon Morning Challenge · 2.0</footer>
+</div>
+
+<div class="overlay" id="overlay">
+ <div class="modal">
+ <img alt="皮卡丘" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png">
+ <h2 id="modalTitle">恭喜完成挑戰！</h2>
+ <p id="modalText"></p>
+ <button onclick="closeModal()">太棒了！</button>
+ </div>
+</div>
+
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzHvVxQynYEOUEgHuzSCqvLYR8Fnwm1MVpUvgxCv4b3oazwLhAPvG5L3Uu04tYTbw3b1w/exec";
+const SCRIPT_URL =
+"https://script.google.com/macros/s/AKfycbzHvVxQynYEOUEgHuzSCqvLYR8Fnwm1MVpUvgxCv4b3oazwLhAPvG5L3Uu04tYTbw3b1w/exec";
 
-let points = 0;
-let room = localStorage.getItem("pokemonRoom") || "";
-let busy = false;
-let connected = false;
+const el=id=>document.getElementById(id);
 
-const el = id => document.getElementById(id);
-el("room").value = room;
+let room=localStorage.getItem("pokemonRoom")||"";
+let connected=false;
+let busy=false;
 
-function render(){
-  el("points").textContent = points;
-  el("bar").style.width = (points/15*100)+"%";
-  el("grid").innerHTML = "";
-  for(let i=0;i<15;i++){
-    const ball=document.createElement("div");
-    ball.className="ball"+(i<points?" active":"");
-    el("grid").appendChild(ball);
+let state={
+ points:0,
+ reward:"神秘驚喜獎勵 🎁",
+ history:[],
+ totalRedeemed:0,
+ canAdd:true
+};
+
+el("room").value=room;
+
+function render(oldPoints=state.points){
+
+ const points=Number(state.points)||0;
+
+ el("points").textContent=points;
+ el("bar").style.width=(points/15*100)+"%";
+ el("rewardText").textContent=state.reward||"神秘驚喜";
+ el("total").textContent=state.totalRedeemed||0;
+
+ el("grid").replaceChildren();
+
+ for(let i=0;i<15;i++){
+  const ball=document.createElement("div");
+  ball.className="ball"+(i<points?" active":"");
+
+  if(i>=oldPoints && i<points){
+   ball.classList.add("pop");
   }
-  el("remaining").textContent = points>=15
-    ? "恭喜集滿！可以兌換獎勵囉！"
-    : "再收集 "+(15-points)+" 點就能兌換獎勵！";
 
-  el("add").disabled = !connected || busy || points>=15;
-  el("undo").disabled = !connected || busy || points<=0;
-  el("redeem").disabled = !connected || busy || points<15;
+  el("grid").appendChild(ball);
+ }
+
+ el("remaining").textContent=points>=15
+ ? "🎉 恭喜集滿15點！"
+ : "還差 "+(15-points)+" 點就能兌換！";
+
+ el("add").disabled=
+ !connected||busy||!state.canAdd||points>=15;
+
+ el("undo").disabled=
+ !connected||busy||points<=0;
+
+ el("edit").disabled=!connected||busy;
+
+ el("redeem").disabled=
+ !connected||busy||points<15;
+
+ el("connect").disabled=busy;
+
+ el("add").textContent=
+ connected&&state.lastAddDate===state.today
+ ? "✓ 今天已完成起床任務"
+ : "☀️ 今天乖乖起床 ＋1";
+
+ el("daily").textContent=
+ connected&&state.lastAddDate===state.today
+ ? "明天凌晨00:00即可再次集點"
+ : "每天限集點一次";
+
+ renderHistory();
 }
 
-async function update(action){
-  if(!room || busy)return;
-  busy=true;
-  render();
-  el("status").textContent="同步中…";
-  try{
-    const res=await fetch(SCRIPT_URL,{
-      method:"POST",
-      headers:{"Content-Type":"text/plain;charset=utf-8"},
-      body:JSON.stringify({action:action,room:room})
-    });
-    const data=await res.json();
-    const value=Number(data.state?.points ?? data.points ?? data.data?.points);
-    if(data.ok===false || data.success===false || !Number.isFinite(value)){
-      throw new Error("資料讀取失敗");
-    }
-    points=Math.max(0,Math.min(15,value));
+function renderHistory(){
+
+ const list=el("historyList");
+ list.replaceChildren();
+
+ const history=Array.isArray(state.history)
+ ? state.history : [];
+
+ if(!history.length){
+  list.textContent="目前沒有紀錄";
+  return;
+ }
+
+ history.forEach(h=>{
+
+  const row=document.createElement("div");
+  row.className="entry";
+
+  const icons={
+   add:"🔴",
+   undo:"↩️",
+   reward:"✏️",
+   redeem:"🎁"
+  };
+
+  const message=document.createElement("div");
+  message.textContent=
+   (icons[h.type]||"⭐")+" "+h.message;
+
+  const date=document.createElement("div");
+  date.className="date";
+  date.textContent=h.time||"";
+
+  row.append(message,date);
+  list.appendChild(row);
+
+ });
+}
+
+async function update(action,extra={}){
+
+ if(!room||busy)return;
+
+ busy=true;
+
+ const wasConnected=connected;
+ const oldPoints=state.points;
+
+ render();
+ el("status").textContent="同步中…";
+
+ try{
+
+  const response=await fetch(SCRIPT_URL,{
+   method:"POST",
+   headers:{
+    "Content-Type":"text/plain;charset=utf-8"
+   },
+   body:JSON.stringify({
+    room:room,
+    action:action,
+    ...extra
+   })
+  });
+
+  const data=await response.json();
+
+  if(data.ok===false){
+
+   if(data.state){
+    state={...state,...data.state};
     connected=true;
-    el("status").textContent="● 已同步 "+new Date().toLocaleTimeString();
-  }catch(e){
-    connected=false;
-    el("status").textContent="⚠️ 同步失敗，請重新連接";
-  }finally{
-    busy=false;
-    render();
-  }
-}
+   }
 
-function connect(){
-  if(busy)return;
-  room=el("room").value.trim();
-  if(!room){
-    alert("請輸入房間代碼");
-    return;
+   el("status").textContent=data.error||"操作失敗";
+
+   if(action!=="get"){
+    showModal("提醒",data.error||"操作失敗");
+   }
+
+   return;
   }
+
+  if(!data.state||
+   typeof data.state.points!=="number"){
+   throw new Error("資料格式不符");
+  }
+
+  state=data.state;
+  connected=true;
+
+  el("status").textContent=
+   "● 已同步 "+new Date().toLocaleTimeString(
+    "zh-TW",{hour12:false}
+   );
+
+  if(action==="redeem"&&data.redeemedReward){
+
+   celebrate();
+
+   showModal(
+    "🎉 成功兌換獎勵！",
+    "你獲得了："+data.redeemedReward
+    +"！下一輪冒險開始囉！"
+   );
+
+  }else if(
+   wasConnected&&oldPoints<15&&state.points===15
+  ){
+
+   celebrate();
+
+   showModal(
+    "🎊 恭喜集滿15點！",
+    "你已完成起床大挑戰，可以兌換獎勵囉！"
+   );
+
+  }
+
+ }catch(error){
+
   connected=false;
-  points=0;
-  localStorage.setItem("pokemonRoom",room);
-  update("get");
+  el("status").textContent=
+   "⚠️ 同步失敗，請重新連接";
+
+  console.error(error);
+
+ }finally{
+
+  busy=false;
+  render(oldPoints);
+
+ }
 }
 
-function redeem(){
-  if(points>=15 && confirm("確定要兌換獎勵嗎？")){
-    update("redeem");
-  }
+function connectRoom(){
+
+ if(busy)return;
+
+ const value=el("room").value.trim().toUpperCase();
+
+ if(!/^[A-Z0-9_-]{4,24}$/.test(value)){
+  alert("房間代碼需為4至24個英數字、底線或連字號");
+  return;
+ }
+
+ room=value;
+ el("room").value=room;
+ connected=false;
+
+ state={
+  points:0,
+  reward:"神秘驚喜獎勵 🎁",
+  history:[],
+  totalRedeemed:0,
+  canAdd:false
+ };
+
+ localStorage.setItem("pokemonRoom",room);
+
+ update("get");
+}
+
+function editReward(){
+
+ if(busy||!connected)return;
+
+ const reward=prompt(
+  "請輸入新的集點獎勵：",
+  state.reward
+ );
+
+ if(reward===null)return;
+
+ if(!reward.trim()){
+  alert("獎勵不能是空白！");
+  return;
+ }
+
+ update("setReward",{
+  reward:reward.trim().slice(0,80)
+ });
+}
+
+function undoPoint(){
+
+ if(state.points>0&&confirm("確定取消上一點？")){
+  update("undo");
+ }
+
+}
+
+function redeemReward(){
+
+ if(state.points>=15&&confirm(
+  "確定要兌換「"+state.reward+"」嗎？"
+  +"兌換後點數將歸零。"
+ )){
+  update("redeem");
+ }
+
+}
+
+function showModal(title,text){
+
+ el("modalTitle").textContent=title;
+ el("modalText").textContent=text;
+ el("overlay").style.display="flex";
+
+}
+
+function closeModal(){
+ el("overlay").style.display="none";
+}
+
+function celebrate(){
+
+ const colors=[
+  "#ffd447","#ff7777","#8edcb0",
+  "#9bc8ff","#dfb6ff"
+ ];
+
+ for(let i=0;i<70;i++){
+
+  const piece=document.createElement("div");
+
+  piece.className="confetti";
+  piece.style.left=Math.random()*100+"vw";
+  piece.style.width="9px";
+  piece.style.height="13px";
+  piece.style.background=colors[
+   Math.floor(Math.random()*colors.length)
+  ];
+  piece.style.animationDelay=Math.random()*.8+"s";
+  piece.style.borderRadius="2px";
+
+  document.body.appendChild(piece);
+
+  setTimeout(()=>piece.remove(),4000);
+
+ }
 }
 
 render();
-if(room)connect();
+
+if(room)connectRoom();
+
 setInterval(()=>{
-  if(room && !busy)update("get");
+ if(room&&!busy)update("get");
 },5000);
+
 </script>
 </body>
 </html>
