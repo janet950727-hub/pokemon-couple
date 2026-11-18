@@ -129,7 +129,7 @@ async function update(action){
       body:JSON.stringify({action:action,room:room})
     });
     const data=await res.json();
-    const value=Number(data.points ?? data.data?.points);
+    const value=Number(data.state?.points ?? data.points ?? data.data?.points);
     if(data.ok===false || data.success===false || !Number.isFinite(value)){
       throw new Error("資料讀取失敗");
     }
